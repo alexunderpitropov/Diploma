@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/consoleshop
+    username: consoleshop_user
+    password: consoleshop_pass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+
+server:
+  port: 8080
+
+jwt:
+  secret: consoleshop_secret_key_2026_very_long_string
+  expiration: 86400000
