@@ -11,10 +11,13 @@ import com.consoleshop.repository.WishlistRepository;
 import com.consoleshop.service.WishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class WishlistServiceImpl implements WishlistService {
 
     private final WishlistRepository wishlistRepository;
@@ -29,16 +32,26 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
+    @Transactional
     public void addToWishlist(Long userId, Long productId) {
         if (wishlistRepository.existsByUserIdAndProductId(userId, productId)) return;
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        wishlistRepository.save(WishlistItem.builder().user(user).product(product).build());
+
+        wishlistRepository.save(
+                WishlistItem.builder()
+                        .user(user)
+                        .product(product)
+                        .build()
+        );
     }
 
     @Override
+    @Transactional
     public void removeFromWishlist(Long userId, Long productId) {
         wishlistRepository.findByUserIdAndProductId(userId, productId)
                 .ifPresent(wishlistRepository::delete);
@@ -50,8 +63,15 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     private ProductResponse mapToResponse(Product p) {
-        return new ProductResponse(p.getId(), p.getName(), p.getDescription(),
-                p.getPrice(), p.getStock(), p.getImageUrl(),
-                p.getPlatform().getName(), p.getCategory().getName());
+        return new ProductResponse(
+                p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getPrice(),
+                p.getStock(),
+                p.getImageUrl(),
+                p.getPlatform().getName(),
+                p.getCategory().getName()
+        );
     }
 }

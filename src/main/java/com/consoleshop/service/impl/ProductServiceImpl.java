@@ -12,10 +12,12 @@ import com.consoleshop.repository.ProductRepository;
 import com.consoleshop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -49,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductResponse create(ProductRequest request) {
         Platform platform = platformRepository.findById(request.getPlatformId())
                 .orElseThrow(() -> new ResourceNotFoundException("Platform not found"));
@@ -67,6 +70,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductResponse update(Long id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
@@ -85,6 +89,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         productRepository.deleteById(id);
     }

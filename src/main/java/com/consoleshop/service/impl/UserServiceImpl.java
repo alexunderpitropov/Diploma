@@ -7,6 +7,7 @@ import com.consoleshop.repository.UserRepository;
 import com.consoleshop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -23,6 +24,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse getByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return mapToResponse(user);
+    }
+
+    @Override
     public List<UserResponse> getAll() {
         return userRepository.findAll().stream()
                 .map(this::mapToResponse)
@@ -31,12 +39,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("User not found");
+        }
         userRepository.deleteById(id);
     }
 
     private UserResponse mapToResponse(User user) {
-        return new UserResponse(user.getId(), user.getEmail(),
-                user.getFirstName(), user.getLastName(),
-                user.getPhoneNumber(), user.getRole().name());
+        return new UserResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
 }

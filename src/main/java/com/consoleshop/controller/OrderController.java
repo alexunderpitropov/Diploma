@@ -3,7 +3,6 @@ package com.consoleshop.controller;
 import com.consoleshop.dto.request.OrderRequest;
 import com.consoleshop.dto.response.OrderResponse;
 import com.consoleshop.entity.User;
-import com.consoleshop.repository.UserRepository;
 import com.consoleshop.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
+import com.consoleshop.repository.UserRepository;
 import java.util.List;
 
 @RestController

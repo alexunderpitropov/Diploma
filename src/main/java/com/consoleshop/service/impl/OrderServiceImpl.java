@@ -14,6 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -73,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderResponse updateStatus(Long id, OrderStatus status) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));

@@ -17,3 +17,7 @@ server:
 jwt:
   secret: consoleshop_secret_key_2026_very_long_string
   expiration: 86400000
+
+app:
+  images-dir: images
+  base-url: http://localhost:8080

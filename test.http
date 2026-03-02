@@ -1,131 +1,42 @@
-### Логин
-POST http://localhost:8080/api/auth/login
-Content-Type: application/json
+@token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMUB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNzcyMzc5MDAyLCJleHAiOjE3NzI0NjU0MDJ9.faZxoQNAyyFnfK3YEDbqgKo9IPyo1Jmgav7Xt8XWqKg
 
-{
-  "email": "user@test.com",
-  "password": "password123"
-}
-
-### Получить все продукты
-GET http://localhost:8080/api/products
-
-### Получить все платформы
-GET http://localhost:8080/api/platforms
+###
 
 ### Получить корзину
 GET http://localhost:8080/api/cart
 Authorization: Bearer {{token}}
 
-### Добавить в корзину
-POST http://localhost:8080/api/cart/add?productId=1&quantity=2
+###
+
+### Добавить товар в корзину (productId = 1)
+POST http://localhost:8080/api/cart
+Content-Type: application/json
 Authorization: Bearer {{token}}
 
-### Обновить количество в корзине
-PUT http://localhost:8080/api/cart/update/1?quantity=3
+{
+  "productId": 1,
+  "quantity": 2
+}
+
+###
+
+### Обновить количество (cartItemId = 1)
+PUT http://localhost:8080/api/cart/1
+Content-Type: application/json
 Authorization: Bearer {{token}}
 
-### Удалить из корзины
-DELETE http://localhost:8080/api/cart/remove/1
+{
+  "quantity": 5
+}
+
+###
+
+### Удалить товар (cartItemId = 1)
+DELETE http://localhost:8080/api/cart/1
 Authorization: Bearer {{token}}
+
+###
 
 ### Очистить корзину
-DELETE http://localhost:8080/api/cart/clear
+DELETE http://localhost:8080/api/cart
 Authorization: Bearer {{token}}
-
-### Получить wishlist
-GET http://localhost:8080/api/wishlist
-Authorization: Bearer {{token}}
-
-### Добавить в wishlist
-POST http://localhost:8080/api/wishlist/add/1
-Authorization: Bearer {{token}}
-
-### Удалить из wishlist
-DELETE http://localhost:8080/api/wishlist/remove/1
-Authorization: Bearer {{token}}
-
-### Создать заказ
-POST http://localhost:8080/api/orders
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "deliveryAddress": "Кишинёв, ул. Тестовая 1"
-}
-
-### Мои заказы
-GET http://localhost:8080/api/orders
-Authorization: Bearer {{token}}
-
-### Заказ по id
-GET http://localhost:8080/api/orders/1
-Authorization: Bearer {{token}}
-
-### Создать категорию
-POST http://localhost:8080/api/admin/categories
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "name": "Консоли",
-  "platform": { "id": 1 }
-}
-
-### Создать продукт
-POST http://localhost:8080/api/admin/products
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "name": "PlayStation 5",
-  "description": "Новейшая консоль Sony PlayStation 5",
-  "price": 499.99,
-  "stock": 10,
-  "imageUrl": "ps5.png",
-  "platformId": 1,
-  "categoryId": 1
-}
-
-### Обновить продукт
-PUT http://localhost:8080/api/admin/products/1
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "name": "PlayStation 5 Updated",
-  "description": "Обновлённая консоль Sony",
-  "price": 449.99,
-  "stock": 15,
-  "imageUrl": "ps5.png",
-  "platformId": 1,
-  "categoryId": 1
-}
-
-### Удалить продукт
-DELETE http://localhost:8080/api/admin/products/1
-Authorization: Bearer {{token}}
-
-### Все пользователи (админ)
-GET http://localhost:8080/api/admin/users
-Authorization: Bearer {{token}}
-
-### Все заказы (админ)
-GET http://localhost:8080/api/admin/orders
-Authorization: Bearer {{token}}
-
-### Обновить статус заказа (админ)
-PUT http://localhost:8080/api/admin/orders/1/status?status=CONFIRMED
-Authorization: Bearer {{token}}
-
-### Регистрация нового пользователя
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-
-{
-  "email": "newuser@test.com",
-  "password": "password123",
-  "firstName": "Тест",
-  "lastName": "Тестов",
-  "phoneNumber": "+373600000002"
-}

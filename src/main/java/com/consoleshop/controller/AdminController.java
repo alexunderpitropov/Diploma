@@ -1,6 +1,7 @@
 package com.consoleshop.controller;
 
 import com.consoleshop.dto.request.ProductRequest;
+import com.consoleshop.dto.response.AdminStatsResponse;
 import com.consoleshop.dto.response.OrderResponse;
 import com.consoleshop.dto.response.ProductResponse;
 import com.consoleshop.dto.response.UserResponse;
@@ -9,6 +10,7 @@ import com.consoleshop.entity.OrderStatus;
 import com.consoleshop.entity.Platform;
 import com.consoleshop.repository.CategoryRepository;
 import com.consoleshop.repository.PlatformRepository;
+import com.consoleshop.service.AdminService;
 import com.consoleshop.service.OrderService;
 import com.consoleshop.service.ProductService;
 import com.consoleshop.service.UserService;
@@ -18,7 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -31,6 +35,7 @@ public class AdminController {
     private final UserService userService;
     private final PlatformRepository platformRepository;
     private final CategoryRepository categoryRepository;
+    private final AdminService adminService;
 
     @GetMapping("/users")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -40,7 +45,22 @@ public class AdminController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<Map<String, Object>>> getAllCategories() {
+        return ResponseEntity.ok(
+                categoryRepository.findAll().stream()
+                        .map(c -> {
+                            Map<String, Object> map = new HashMap<>();
+                            map.put("id", c.getId());
+                            map.put("name", c.getName());
+                            map.put("platformId", c.getPlatform() != null ? c.getPlatform().getId() : null);
+                            return map;
+                        })
+                        .toList()
+        );
     }
 
     @PostMapping("/platforms")
@@ -67,7 +87,7 @@ public class AdminController {
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/orders")
@@ -79,5 +99,10 @@ public class AdminController {
     public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable Long id,
                                                            @RequestParam OrderStatus status) {
         return ResponseEntity.ok(orderService.updateStatus(id, status));
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<AdminStatsResponse> getStats() {
+        return ResponseEntity.ok(adminService.getStats());
     }
 }

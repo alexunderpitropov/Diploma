@@ -28,32 +28,72 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
+
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
         );
+
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        String token = jwtTokenProvider.generateToken(user.getEmail());
-        return new AuthResponse(token, user.getEmail(), user.getRole().name());
+
+        String token = jwtTokenProvider.generateToken(
+                user.getEmail(),
+                user.getRole().name()
+        );
+
+        return new AuthResponse(
+                token,
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
 
     @Override
     public AuthResponse register(RegisterRequest request) {
+
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
+
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        if (request.getPhoneNumber() != null &&
+                userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new RuntimeException("Phone number already exists");
+        }
+
         User user = User.builder()
                 .email(request.getEmail())
+                .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .phoneNumber(request.getPhoneNumber())
                 .role(Role.USER)
                 .build();
+
         userRepository.save(user);
-        Cart cart = Cart.builder().user(user).build();
+
+        Cart cart = Cart.builder()
+                .user(user)
+                .build();
+
         cartRepository.save(cart);
-        String token = jwtTokenProvider.generateToken(user.getEmail());
-        return new AuthResponse(token, user.getEmail(), user.getRole().name());
+
+        String token = jwtTokenProvider.generateToken(
+                user.getEmail(),
+                user.getRole().name()
+        );
+
+        return new AuthResponse(
+                token,
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
 }
