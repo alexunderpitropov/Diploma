@@ -3,6 +3,7 @@ package com.consoleshop.service.impl;
 import com.consoleshop.dto.request.OrderRequest;
 import com.consoleshop.dto.response.OrderResponse;
 import com.consoleshop.entity.*;
+import com.consoleshop.entity.CartItem;
 import com.consoleshop.exception.ResourceNotFoundException;
 import com.consoleshop.repository.*;
 import com.consoleshop.service.OrderService;
@@ -30,6 +31,21 @@ public class OrderServiceImpl implements OrderService {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
 
+        if (cart.getItems().isEmpty()) {
+            throw new IllegalStateException("Cart is empty");
+        }
+
+        for (CartItem cartItem : cart.getItems()) {
+            Product product = cartItem.getProduct();
+            if (product.getStock() < cartItem.getQuantity()) {
+                throw new IllegalStateException(
+                        "Недостаточно товара на складе: " + product.getName() +
+                                ". Доступно: " + product.getStock() +
+                                ", запрошено: " + cartItem.getQuantity()
+                );
+            }
+        }
+
         List<OrderItem> orderItems = cart.getItems().stream()
                 .map(item -> OrderItem.builder()
                         .product(item.getProduct())
@@ -51,6 +67,13 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderItems.forEach(i -> i.setOrder(order));
+
+        cart.getItems().forEach(cartItem -> {
+            Product product = cartItem.getProduct();
+            product.setStock(product.getStock() - cartItem.getQuantity());
+            productRepository.save(product);
+        });
+
         orderRepository.save(order);
         cart.getItems().clear();
         cartRepository.save(cart);

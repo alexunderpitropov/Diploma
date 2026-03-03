@@ -40,6 +40,12 @@ public class CartServiceImpl implements CartService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
+        if (product.getStock() < quantity) {
+            throw new IllegalStateException(
+                    "Недостаточно товара на складе. Доступно: " + product.getStock()
+            );
+        }
+
         cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
                 .ifPresentOrElse(
                         item -> {
@@ -61,7 +67,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public CartResponse updateItem(Long userId, Long cartItemId, Integer quantity) {
-        CartItem item = cartItemRepository.findByIdAndCart_User_Id(cartItemId, userId)
+        CartItem item = cartItemRepository.findByIdAndUserId(cartItemId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart item not found"));
 
         item.setQuantity(quantity);
@@ -73,7 +79,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public CartResponse removeItem(Long userId, Long cartItemId) {
-        CartItem item = cartItemRepository.findByIdAndCart_User_Id(cartItemId, userId)
+        CartItem item = cartItemRepository.findByIdAndUserId(cartItemId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart item not found"));
 
         cartItemRepository.deleteById(item.getId());

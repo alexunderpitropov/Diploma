@@ -15,7 +15,7 @@ server:
   port: 8080
 
 jwt:
-  secret: consoleshop_secret_key_2026_very_long_string
+  secret: ${JWT_SECRET:consoleshop_secret_key_2026_very_long_string}
   expiration: 86400000
 
 app:
