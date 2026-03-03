@@ -1,6 +1,7 @@
 package com.consoleshop.service.impl;
 
 import com.consoleshop.dto.response.ProductResponse;
+import com.consoleshop.entity.Platform;
 import com.consoleshop.entity.Product;
 import com.consoleshop.entity.User;
 import com.consoleshop.entity.WishlistItem;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +41,7 @@ public class WishlistServiceImpl implements WishlistService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findByIdWithPlatforms(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         wishlistRepository.save(
@@ -63,6 +65,11 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     private ProductResponse mapToResponse(Product p) {
+        List<String> platformNames = p.getPlatforms().stream()
+                .map(Platform::getName)
+                .sorted()
+                .collect(Collectors.toList());
+
         return new ProductResponse(
                 p.getId(),
                 p.getName(),
@@ -70,8 +77,10 @@ public class WishlistServiceImpl implements WishlistService {
                 p.getPrice(),
                 p.getStock(),
                 p.getImageUrl(),
-                p.getPlatform().getName(),
-                p.getCategory().getName()
+                platformNames,
+                p.getCategory().getName(),
+                p.getCategory().getId(),
+                p.getSpecs()
         );
     }
 }
