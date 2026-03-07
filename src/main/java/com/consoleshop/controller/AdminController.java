@@ -97,8 +97,8 @@ public class AdminController {
 
     @PutMapping("/orders/{id}/status")
     public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable Long id,
-                                                           @RequestParam OrderStatus status) {
-        return ResponseEntity.ok(orderService.updateStatus(id, status));
+                                                           @RequestParam String status) {
+        return ResponseEntity.ok(orderService.updateStatus(id, OrderStatus.valueOf(status)));
     }
 
     @GetMapping("/stats")
