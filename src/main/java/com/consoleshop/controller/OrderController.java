@@ -43,4 +43,11 @@ public class OrderController {
         }
         return ResponseEntity.ok(order);
     }
+
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<OrderResponse> cancel(@AuthenticationPrincipal UserDetails userDetails,
+                                                @PathVariable Long id) {
+        Long userId = securityUtils.getUserId(userDetails);
+        return ResponseEntity.ok(orderService.cancel(id, userId));
+    }
 }

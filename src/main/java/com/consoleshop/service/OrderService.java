@@ -11,4 +11,5 @@ public interface OrderService {
     List<OrderResponse> getByUserId(Long userId);
     List<OrderResponse> getAll();
     OrderResponse updateStatus(Long id, OrderStatus status);
+    OrderResponse cancel(Long id, Long userId);
 }

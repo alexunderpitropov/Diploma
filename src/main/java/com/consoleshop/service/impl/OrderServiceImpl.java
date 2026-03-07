@@ -5,6 +5,7 @@ import com.consoleshop.dto.response.OrderResponse;
 import com.consoleshop.entity.*;
 import com.consoleshop.entity.CartItem;
 import com.consoleshop.exception.ResourceNotFoundException;
+import com.consoleshop.exception.UnauthorizedException;
 import com.consoleshop.repository.*;
 import com.consoleshop.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -102,6 +103,31 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         order.setStatus(status);
+        return mapToResponse(orderRepository.save(order));
+    }
+
+    @Override
+    @Transactional
+    public OrderResponse cancel(Long id, Long userId) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        if (!order.getUser().getId().equals(userId)) {
+            throw new UnauthorizedException("Нет доступа к этому заказу");
+        }
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new IllegalStateException("Отменить можно только заказ со статусом 'Ожидает'");
+        }
+
+        // Restore stock
+        order.getItems().forEach(item -> {
+            Product product = item.getProduct();
+            product.setStock(product.getStock() + item.getQuantity());
+            productRepository.save(product);
+        });
+
+        order.setStatus(OrderStatus.CANCELLED);
         return mapToResponse(orderRepository.save(order));
     }
 
