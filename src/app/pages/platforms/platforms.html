@@ -1,0 +1,59 @@
+<section class="hero hero--ps">
+  <div class="hero__content">
+    <h1>Выберите платформу</h1>
+    <p class="hero__subtitle">
+      Откройте для себя экосистему любимой платформы — консоли, игры,
+      аксессуары и всё, что нужно для идеального игрового опыта.
+    </p>
+
+    <div class="cards">
+
+      <div class="card card--ps" (click)="select('playstation')">
+        <div class="card__top">
+          <img class="badge-logo" src="../../../ps.png" alt="PlayStation" />
+          <span class="card__title">PlayStation</span>
+        </div>
+        <div class="card__desc">
+          <p class="card__main">
+            Мир кинематографичных эксклюзивов и передовых технологий.
+          </p>
+          <p class="card__extra">
+            Консоли PS4 и PS5, геймпады DualSense, фирменные аксессуары
+            и культовые игровые серии — всё для полного погружения.
+          </p>
+        </div>
+      </div>
+
+      <div class="card card--xbox" (click)="select('xbox')">
+        <div class="card__top">
+          <img class="badge-logo" src="../../../xbox.png" alt="Xbox" />
+          <span class="card__title">Xbox</span>
+        </div>
+        <div class="card__desc">
+          <p class="card__main">
+            Производительность, сервисы и свобода выбора.
+          </p>
+          <p class="card__extra">
+            Консоли Xbox Series, контроллеры нового поколения,
+            Game Pass и лучшие мультиплатформенные хиты.
+          </p>
+        </div>
+      </div>
+
+      <div class="card card--nintendo" (click)="select('nintendo')">
+        <div class="card__top">
+          <img class="badge-logo" src="nin.png" alt="Nintendo" />        </div>
+        <div class="card__desc">
+          <p class="card__main">
+            Уникальные миры, яркий стиль и семейный формат.
+          </p>
+          <p class="card__extra">
+            Nintendo Switch, фирменные аксессуары и легендарные
+            приключения для игры дома и в дороге.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

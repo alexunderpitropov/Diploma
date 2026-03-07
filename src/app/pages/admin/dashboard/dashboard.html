@@ -1,0 +1,36 @@
+<section class="page">
+  <div class="top">
+    <div class="title">
+      <h1>Админ-панель</h1>
+      <p>Сводка по магазину и быстрые действия.</p>
+    </div>
+  </div>
+
+  <ng-container *ngIf="vm$ | async as vm">
+    <div *ngIf="vm.state === 'loading'" class="state">Загрузка…</div>
+    <div *ngIf="vm.state === 'error'" class="state state--error">Не удалось загрузить статистику</div>
+
+    <div *ngIf="vm.state === 'ready'" class="grid">
+      <a class="stat" routerLink="/admin/users">
+        <div class="stat__label">Пользователи</div>
+        <div class="stat__value">{{ vm.stats.totalUsers }}</div>
+      </a>
+      <a class="stat" routerLink="/admin/products">
+        <div class="stat__label">Товары</div>
+        <div class="stat__value">{{ vm.stats.totalProducts }}</div>
+      </a>
+      <a class="stat" routerLink="/admin/orders">
+        <div class="stat__label">Заказы</div>
+        <div class="stat__value">{{ vm.stats.totalOrders }}</div>
+      </a>
+      <a class="stat" routerLink="/admin/orders">
+        <div class="stat__label">Ожидают</div>
+        <div class="stat__value">{{ vm.stats.pendingOrders }}</div>
+      </a>
+      <div class="stat stat--accent">
+        <div class="stat__label">Выручка</div>
+        <div class="stat__value">{{ vm.stats.totalRevenue }} MDL</div>
+      </div>
+    </div>
+  </ng-container>
+</section>

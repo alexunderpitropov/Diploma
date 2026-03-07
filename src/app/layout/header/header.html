@@ -1,0 +1,48 @@
+<header class="header" [ngClass]="themeService.theme()">
+  <div class="header__inner">
+    <a class="logo" routerLink="/platforms">ConsoleShop</a>
+
+    <nav class="nav">
+      <a routerLink="/platforms"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact:true}">
+        Платформы
+      </a>
+
+      <a routerLink="/catalog" routerLinkActive="active">
+        Каталог
+      </a>
+
+      <a class="cart-link" routerLink="/cart" routerLinkActive="active">
+        Корзина
+        @if (cartCount.count() > 0) {
+          <span class="cart-badge">{{ cartCount.count() }}</span>
+        }
+      </a>
+
+      @if (auth.isLoggedIn()) {
+        <a routerLink="/profile" routerLinkActive="active">
+          Личный кабинет
+        </a>
+      }
+
+      @if (!auth.isLoggedIn()) {
+        <a routerLink="/auth">
+          Вход
+        </a>
+      }
+
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/dashboard" routerLinkActive="active">
+          Админ
+        </a>
+      }
+
+      @if (auth.isLoggedIn()) {
+        <a class="logout" (click)="logout()">
+          Выйти
+        </a>
+      }
+    </nav>
+  </div>
+</header>

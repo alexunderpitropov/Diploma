@@ -1,0 +1,82 @@
+<section class="page">
+
+  <div class="top">
+    <div class="title">
+      <h1>Заказы</h1>
+      <p>Управление заказами покупателей</p>
+    </div>
+    <a class="btn btn--ghost" routerLink="/admin/dashboard">← Дашборд</a>
+  </div>
+
+  @if (loading) {
+    <div class="state">Загрузка…</div>
+  }
+
+  @if (!loading && orders.length === 0) {
+    <div class="state">Заказов нет</div>
+  }
+
+  @if (!loading && orders.length > 0) {
+    <div class="list">
+      @for (o of orders; track o.id) {
+        <div class="order">
+
+          <div class="order__head" (click)="toggle(o.id)">
+            <div class="order__meta">
+              <span class="order__id">#{{ o.id }}</span>
+              <span class="badge" [ngClass]="'badge--' + o.status.toLowerCase()">
+                {{ label(o.status) }}
+              </span>
+            </div>
+            <div class="order__info">
+              <span class="order__addr">{{ o.deliveryAddress }}</span>
+              <span class="order__price">{{ o.totalPrice }} MDL</span>
+              <span class="order__date">{{ o.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+            </div>
+            <div class="order__arrow">{{ expandedId === o.id ? '▲' : '▼' }}</div>
+          </div>
+
+          @if (expandedId === o.id) {
+            <div class="order__body">
+              <table>
+                <thead>
+                <tr>
+                  <th>Товар</th>
+                  <th>Кол-во</th>
+                  <th>Цена за шт.</th>
+                  <th>Итого</th>
+                </tr>
+                </thead>
+                <tbody>
+                  @for (item of o.items; track item.id) {
+                    <tr>
+                      <td>{{ item.productName }}</td>
+                      <td>{{ item.quantity }}</td>
+                      <td>{{ item.priceAtPurchase }} MDL</td>
+                      <td>{{ item.quantity * item.priceAtPurchase }} MDL</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+
+              <div class="status-bar">
+                <span class="status-label">Сменить статус:</span>
+                <div class="status-btns">
+                  @for (s of statuses; track s) {
+                    <button
+                      class="status-btn"
+                      [class.active]="o.status === s"
+                      (click)="changeStatus(o, s)"
+                    >{{ label(s) }}</button>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+
+        </div>
+      }
+    </div>
+  }
+
+</section>

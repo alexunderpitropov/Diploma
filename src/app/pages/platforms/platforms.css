@@ -1,0 +1,130 @@
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 20px 24px;
+}
+
+.hero__content {
+  border-radius: 18px;
+  padding: 36px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+  background:
+    radial-gradient(900px 280px at 18% 8%, rgba(45, 91, 209, 0.12), rgba(255,255,255,0) 60%),
+    radial-gradient(900px 280px at 50% 6%, rgba(47, 138, 87, 0.12), rgba(255,255,255,0) 60%),
+    radial-gradient(900px 280px at 82% 8%, rgba(211, 58, 58, 0.12), rgba(255,255,255,0) 60%),
+    #ffffff;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 42px;
+}
+
+.hero__subtitle {
+  margin: 0 0 34px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #555;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.card {
+  display: block;
+  padding: 26px;
+  border-radius: 20px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+.card__top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.card__title {
+  font-weight: 800;
+  font-size: 20px;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.card__desc {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card__main {
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+  color: rgba(255,255,255,0.98);
+}
+
+.card__extra {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.92);
+}
+
+.badge-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: contain;
+  background: rgba(255,255,255,0.18);
+  padding: 4px;
+}
+
+.card--ps {
+  background: linear-gradient(135deg, #1e3c8a, #2d5bd1);
+  box-shadow: 0 16px 40px rgba(45, 91, 209, 0.25);
+}
+
+.card--ps:hover {
+  box-shadow: 0 28px 70px rgba(45, 91, 209, 0.45);
+}
+
+.card--xbox {
+  background: linear-gradient(135deg, #1f5d3b, #2f8a57);
+  box-shadow: 0 16px 40px rgba(47, 138, 87, 0.25);
+}
+
+.card--xbox:hover {
+  box-shadow: 0 28px 70px rgba(47, 138, 87, 0.45);
+}
+
+.card--nintendo {
+  background: linear-gradient(135deg, #a82222, #d33a3a);
+  box-shadow: 0 16px 40px rgba(211, 58, 58, 0.25);
+}
+
+.card--nintendo:hover {
+  box-shadow: 0 28px 70px rgba(211, 58, 58, 0.45);
+}
+
+@media (max-width: 900px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+}

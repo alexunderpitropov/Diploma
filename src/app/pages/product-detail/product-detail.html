@@ -1,0 +1,107 @@
+<section class="page" [ngClass]="themeClass">
+
+  <div class="page-bg"></div>
+
+  @if (loading) {
+    <div class="state">Загрузка…</div>
+  }
+
+  @if (error) {
+    <div class="state state--error">Товар не найден</div>
+  }
+
+  @if (!loading && !error && product) {
+    <div class="product">
+      <div class="product__img">
+        @if (product.imageUrl) {
+          <img [src]="product.imageUrl" [alt]="product.name" />
+        } @else {
+          <div class="product__placeholder"></div>
+        }
+      </div>
+
+      <div class="product__info">
+        <div class="product__meta">
+          @for (pName of (product.platformNames || []); track pName) {
+            <span class="badge">{{ pName }}</span>
+          }
+          <span class="badge badge--cat">{{ product.categoryName }}</span>
+        </div>
+
+        <h1 class="product__name">{{ product.name }}</h1>
+
+        @if (product.description) {
+          <p class="product__desc">{{ product.description }}</p>
+        }
+
+        @if ((product.stock ?? 0) === -1) {
+          <div class="product__stock wait">Ожидается</div>
+        } @else if ((product.stock ?? 0) > 0) {
+          <div class="product__stock in">В наличии</div>
+        } @else {
+          <div class="product__stock out">Нет в наличии</div>
+        }
+
+        <div class="product__price">{{ product.price }} MDL</div>
+
+        <div class="product__actions">
+          <button class="btn" [disabled]="(product.stock ?? 0) <= 0 || adding" (click)="addToCart()">
+            {{ added ? '✓ Добавлено' : adding ? 'Добавление...' : 'В корзину' }}
+          </button>
+          <button class="btn btn--ghost" [disabled]="togglingWishlist" (click)="toggleWishlist()">
+            {{ inWishlist ? '❤️ В избранном' : '🤍 В избранное' }}
+          </button>
+          <button class="btn btn--ghost" (click)="goBack()">← Назад</button>        </div>
+      </div>
+    </div>
+
+    @if (specs && specs.length > 0) {
+      <div class="specs-block">
+        <div class="specs-block__tabs">
+          <button class="specs-tab active">Характеристики</button>
+        </div>
+        <div class="specs-grid">
+          @for (s of specs; track s.key) {
+            <div class="specs-row">
+              <div class="specs-row__label">{{ s.label }}</div>
+              <div class="specs-row__value">{{ s.value }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (allSimilar.length > 0) {
+      <div class="similar">
+        <div class="similar__head">
+          <div class="similar__title">Похожие товары</div>
+          @if (totalSimilarPages > 1) {
+            <div class="similar__nav">
+              <button class="similar__nav-btn" [disabled]="!canPrev" (click)="prevSimilar()">←</button>
+              <span class="similar__nav-pages">{{ similarPage + 1 }} / {{ totalSimilarPages }}</span>
+              <button class="similar__nav-btn" [disabled]="!canNext" (click)="nextSimilar()">→</button>
+            </div>
+          }
+        </div>
+        <div class="similar__grid">
+          @for (p of similar; track p.id) {
+            <a class="similar-card" [routerLink]="['/product', p.id]">
+              <div class="similar-card__img">
+                @if (p.imageUrl) {
+                  <img [src]="p.imageUrl" [alt]="p.name" />
+                } @else {
+                  <div class="similar-card__placeholder"></div>
+                }
+              </div>
+              <div class="similar-card__info">
+                <div class="similar-card__name">{{ p.name }}</div>
+                <div class="similar-card__price">{{ p.price }} MDL</div>
+              </div>
+            </a>
+          }
+        </div>
+      </div>
+    }
+  }
+
+</section>

@@ -1,0 +1,84 @@
+<div class="catalog" [ngClass]="themeClass">
+
+  <div class="page-bg"></div>
+
+  <div class="catalog__header">
+    <div class="catalog__title">
+      <h1>{{ platformName }}</h1>
+      <div class="catalog__subtitle">
+        Консоли, игры и аксессуары — выбирай категорию или ищи по названию
+      </div>
+    </div>
+    <input
+      class="search__input"
+      type="text"
+      placeholder="Поиск товаров…"
+      [value]="query"
+      (input)="setQuery(($any($event.target)).value)"
+    />
+  </div>
+
+  <div class="toolbar">
+    <div class="tabs">
+      <button class="tab" [class.active]="category==='all'" (click)="setCategory('all')">Все</button>
+      <button class="tab" [class.active]="category==='consoles'" (click)="setCategory('consoles')">Консоли</button>
+      <button class="tab" [class.active]="category==='games'" (click)="setCategory('games')">Игры</button>
+      <button class="tab" [class.active]="category==='devices'" (click)="setCategory('devices')">Девайсы</button>
+    </div>
+    <div class="toolbar__right">
+      <span class="results-count">{{ filtered.length }} товаров</span>
+      <select class="sort-select" [value]="sort" (change)="setSort(($any($event.target)).value)">
+        @for (o of sortOptions; track o.value) {
+          <option [value]="o.value">{{ o.label }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="state">Загрузка…</div>
+  }
+
+  @if (!loading && filtered.length === 0) {
+    <div class="state">Ничего не найдено</div>
+  }
+
+  @if (!loading && filtered.length > 0) {
+    <div class="grid">
+      @for (p of paginated; track p.id) {
+        <a class="item" [routerLink]="['/product', p.id]">
+          <div class="item__img">
+            @if (p.imageUrl) {
+              <img [src]="p.imageUrl" [alt]="p.name || 'Товар'" />
+            } @else {
+              <div class="item__placeholder"></div>
+            }
+          </div>
+          <div class="item__body">
+            <div class="item__name">{{ p.name }}</div>
+            <div class="item__meta">{{ p.categoryName || '' }}</div>
+            <div class="item__bottom">
+              <div class="item__price">{{ p.price }} MDL</div>
+              <div class="item__btn">Открыть</div>
+            </div>
+          </div>
+        </a>
+      }
+    </div>
+
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">←</button>
+        @for (p of pageNumbers; track p) {
+          @if (p < 0) {
+            <span class="page-dots">…</span>
+          } @else {
+            <button class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">{{ p }}</button>
+          }
+        }
+        <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">→</button>
+      </div>
+    }
+  }
+
+</div>

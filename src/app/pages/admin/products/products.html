@@ -1,0 +1,191 @@
+<section class="page">
+
+  <div class="top">
+    <div class="title">
+      <h1>Товары</h1>
+      <p>Управление каталогом магазина</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn--ghost" routerLink="/admin/dashboard">← Дашборд</a>
+      <button class="btn" (click)="openAdd()">+ Добавить товар</button>
+    </div>
+  </div>
+
+  @if (showForm) {
+    <div class="modal-overlay" (click)="closeForm()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal__head">
+          <div class="modal__title">{{ editingId ? 'Редактировать товар' : 'Новый товар' }}</div>
+          <button class="modal__close" (click)="closeForm()">✕</button>
+        </div>
+
+        <div class="form">
+          <div class="field">
+            <label>Название *</label>
+            <input type="text" [(ngModel)]="form.name" placeholder="Например: God of War, DualSense, PS5 Pro" />
+          </div>
+
+          <div class="field">
+            <label>Описание</label>
+            <textarea [(ngModel)]="form.description" rows="3" placeholder="Описание товара..."></textarea>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>Цена (MDL) *</label>
+              <input type="number" [(ngModel)]="form.price" placeholder="0" min="0" />
+            </div>
+            <div class="field">
+              <label>Количество *</label>
+              <input type="number" [(ngModel)]="form.stock" placeholder="0" min="0" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Фото товара</label>
+            <div class="upload-area">
+              @if (imagePreview) {
+                <img [src]="imagePreview" class="upload-preview" alt="" />
+              } @else {
+                <div class="upload-placeholder">Фото не выбрано</div>
+              }
+              <label class="upload-btn">
+                {{ uploading ? 'Загрузка...' : 'Выбрать файл' }}
+                <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Платформы * (можно выбрать несколько)</label>
+            <div class="platform-dropdown">
+              <button type="button" class="platform-dropdown__trigger" (click)="togglePlatformMenu(); $event.stopPropagation()">
+                {{ form.platformIds.length === 0 ? 'Выберите платформы...' : selectedPlatformNames() }}
+                <span class="platform-dropdown__arrow">▾</span>
+              </button>
+              @if (platformMenuOpen) {
+                <div class="platform-dropdown__menu" (click)="$event.stopPropagation()">
+                  @for (pl of platforms; track pl.id) {
+                    <label class="platform-dropdown__item" [class.selected]="isPlatformSelected(pl.id)">
+                      <input type="checkbox" [checked]="isPlatformSelected(pl.id)" (change)="togglePlatform(pl.id)" />
+                      {{ pl.name }}
+                    </label>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Категория *</label>
+            <select [(ngModel)]="form.categoryId" (ngModelChange)="onCategoryChange()">
+              <option [value]="0" disabled>Выберите...</option>
+              @for (c of filteredCategories; track c.id) {
+                <option [value]="c.id">{{ c.name }}</option>
+              }
+            </select>
+          </div>
+
+          @if (specFields.length > 0) {
+            <div class="specs-section">
+              <div class="specs-title">Характеристики</div>
+              @for (f of specFields; track f.key) {
+                <div class="field">
+                  <label>{{ f.label }}</label>
+                  <input type="text" [(ngModel)]="specValues[f.key]" [placeholder]="f.label" />
+                </div>
+              }
+            </div>
+          }
+
+          @if (error) {
+            <div class="error">{{ error }}</div>
+          }
+
+          <div class="form__actions">
+            <button class="btn btn--ghost" type="button" (click)="closeForm()">Отмена</button>
+            <button class="btn" type="button" (click)="save()" [disabled]="saving || uploading">
+              {{ saving ? 'Сохранение...' : (editingId ? 'Сохранить' : 'Добавить') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (loading) {
+    <div class="state">Загрузка…</div>
+  }
+
+  @if (!loading && products.length === 0) {
+    <div class="state">Товаров нет</div>
+  }
+
+  @if (!loading && products.length > 0) {
+    <div class="table-wrap">
+      <table>
+        <thead>
+        <tr>
+          <th class="th--sort" (click)="sort('id')">ID {{ sortIcon('id') }}</th>
+          <th>Фото</th>
+          <th class="th--sort" (click)="sort('name')">Название {{ sortIcon('name') }}</th>
+          <th class="th--sort" (click)="sort('platform')">Платформы {{ sortIcon('platform') }}</th>
+          <th class="th--sort" (click)="sort('category')">Категория {{ sortIcon('category') }}</th>
+          <th class="th--sort" (click)="sort('price')">Цена {{ sortIcon('price') }}</th>
+          <th class="th--sort" (click)="sort('stock')">Наличие {{ sortIcon('stock') }}</th>
+          <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (p of sortedProducts; track p.id) {
+            <tr>
+              <td class="td--id">{{ p.id }}</td>
+              <td class="td--img">
+                @if (p.imageUrl) {
+                  <img [src]="p.imageUrl" [alt]="p.name" />
+                } @else {
+                  <div class="img-placeholder"></div>
+                }
+              </td>
+              <td class="td--name">{{ p.name }}</td>
+              <td>{{ (p.platformNames || []).join(', ') || '—' }}</td>
+              <td>{{ p.categoryName || '—' }}</td>
+              <td class="td--price">{{ p.price }} MDL</td>
+              <td>
+                <div class="stock-dropdown" [class.open]="openDropdownId === p.id">
+                  <button
+                    class="stock-trigger"
+                    [class.stock-trigger--in]="stockValue(p.stock) === 1"
+                    [class.stock-trigger--out]="stockValue(p.stock) === 0"
+                    [class.stock-trigger--wait]="stockValue(p.stock) === -1"
+                    (click)="toggleDropdown(p.id); $event.stopPropagation()"
+                  >
+                    {{ stockLabel(p.stock) }} ▾
+                  </button>
+                  @if (openDropdownId === p.id) {
+                    <div class="stock-menu">
+                      @for (s of stockStatuses; track s.value) {
+                        <div
+                          class="stock-option"
+                          [class.stock-option--active]="stockValue(p.stock) === s.value"
+                          (click)="changeStock(p, s.value); toggleDropdown(null)"
+                        >
+                          {{ s.label }}
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              </td>
+              <td class="td--actions">
+                <button class="action-btn" (click)="openEdit(p)">✏️</button>
+                <button class="action-btn action-btn--del" (click)="delete(p.id)">🗑️</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</section>

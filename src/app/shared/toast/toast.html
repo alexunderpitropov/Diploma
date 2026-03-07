@@ -1,0 +1,13 @@
+<div class="toast-container">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div class="toast" [ngClass]="'toast--' + toast.type">
+      <span class="toast__icon">
+        @if (toast.type === 'success') { ✓ }
+        @if (toast.type === 'error') { ✕ }
+        @if (toast.type === 'info') { i }
+      </span>
+      <span class="toast__msg">{{ toast.message }}</span>
+      <button class="toast__close" (click)="toastService.remove(toast.id)">×</button>
+    </div>
+  }
+</div>

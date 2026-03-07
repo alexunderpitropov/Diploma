@@ -1,0 +1,146 @@
+<section class="page">
+  <div class="top">
+    <h1>Оформление заказа</h1>
+    <a class="btn btn--ghost" routerLink="/cart">← Корзина</a>
+  </div>
+
+  @if (loading) {
+    <div class="state">Загрузка…</div>
+  }
+
+  @if (!loading && items.length === 0) {
+    <div class="state">Корзина пуста — нечего оформлять</div>
+  }
+
+  @if (!loading && items.length > 0) {
+    <div class="layout">
+
+      <div class="summary">
+        <div class="block">
+          <div class="block__title">Ваш заказ</div>
+          @for (item of items; track item.cartItemId) {
+            <div class="order-item">
+              <div class="order-item__name">{{ item.productName }}</div>
+              <div class="order-item__qty">{{ item.quantity }} шт.</div>
+              <div class="order-item__price">{{ +item.price * item.quantity }} MDL</div>
+            </div>
+          }
+          <div class="total">
+            <span>Итого:</span>
+            <strong>{{ total }} MDL</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-wrap">
+        <div class="block">
+          <div class="block__title">Данные доставки</div>
+
+          <div class="field">
+            <label>Адрес доставки *</label>
+            <input
+              type="text"
+              [(ngModel)]="address"
+              placeholder="Кишинёв, ул. Штефан чел Маре, 1"
+            />
+          </div>
+
+          <div class="block__title">Способ оплаты</div>
+
+          <div class="payment-options">
+            @for (opt of paymentOptions; track opt.value) {
+              <div
+                class="payment-option"
+                [class.payment-option--active]="paymentMethod === opt.value"
+                (click)="selectPayment(opt.value)"
+              >
+                <div class="payment-option__icon">{{ opt.icon }}</div>
+                <div class="payment-option__body">
+                  <div class="payment-option__label">{{ opt.label }}</div>
+                  <div class="payment-option__desc">{{ opt.desc }}</div>
+                </div>
+                <div class="payment-option__check">
+                  @if (paymentMethod === opt.value) { ✓ }
+                </div>
+              </div>
+            }
+          </div>
+
+          @if (paymentMethod === 'card_online') {
+            <div class="card-form">
+              <div class="card-form__title">Данные карты</div>
+
+              <div class="card-preview">
+                <div class="card-preview__chip">▪▪▪</div>
+                <div class="card-preview__number">
+                  {{ cardNumber || '0000 0000 0000 0000' }}
+                </div>
+                <div class="card-preview__bottom">
+                  <div class="card-preview__holder">{{ cardHolder || 'CARDHOLDER NAME' }}</div>
+                  <div class="card-preview__expiry">{{ cardExpiry || 'MM/YY' }}</div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Номер карты *</label>
+                <input
+                  type="text"
+                  [value]="cardNumber"
+                  (input)="formatCardNumber($event)"
+                  placeholder="0000 0000 0000 0000"
+                  maxlength="19"
+                  autocomplete="cc-number"
+                />
+              </div>
+
+              <div class="field">
+                <label>Имя владельца *</label>
+                <input
+                  type="text"
+                  [(ngModel)]="cardHolder"
+                  placeholder="IVAN PETROV"
+                  style="text-transform: uppercase"
+                  autocomplete="cc-name"
+                />
+              </div>
+
+              <div class="card-row">
+                <div class="field">
+                  <label>Срок действия *</label>
+                  <input
+                    type="text"
+                    [value]="cardExpiry"
+                    (input)="formatExpiry($event)"
+                    placeholder="MM/YY"
+                    maxlength="5"
+                    autocomplete="cc-exp"
+                  />
+                </div>
+                <div class="field">
+                  <label>CVV *</label>
+                  <input
+                    type="password"
+                    [value]="cardCvv"
+                    (input)="formatCvv($event)"
+                    placeholder="•••"
+                    maxlength="3"
+                    autocomplete="cc-csc"
+                  />
+                </div>
+              </div>
+            </div>
+          }
+
+          @if (error) {
+            <div class="error">{{ error }}</div>
+          }
+
+          <button class="btn" [disabled]="saving" (click)="submit()">
+            {{ saving ? 'Оформление...' : 'Подтвердить заказ' }}
+          </button>
+        </div>
+      </div>
+
+    </div>
+  }
+</section>

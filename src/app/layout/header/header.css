@@ -1,0 +1,101 @@
+.header {
+  background: #0f0f0f;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #1f1f1f;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.header.theme-ps {
+  background: #003087;
+  border-bottom-color: #0050b3;
+}
+
+.header.theme-xbox {
+  background: #0a4a0a;
+  border-bottom-color: #107c10;
+}
+
+.header.theme-nintendo {
+  background: #9e0009;
+  border-bottom-color: #e4000f;
+}
+
+.header__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.logo {
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.nav a {
+  color: #cfcfcf;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.nav a:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.nav a.active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.cart-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cart-badge {
+  background: #e4000f;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.logout {
+  color: #cfcfcf;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.logout:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}

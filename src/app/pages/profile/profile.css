@@ -1,0 +1,153 @@
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 20px;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.profile__hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #0f0f0f;
+  color: #fff;
+  font-size: 28px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile__hero-info {
+  flex: 1;
+}
+
+.profile__name {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 900;
+  color: #111;
+}
+
+.profile__email {
+  font-size: 14px;
+  color: #666;
+}
+
+.profile__username {
+  font-size: 13px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.badge {
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+  background: #f2f2f2;
+}
+
+.badge--admin {
+  background: rgba(45, 91, 209, 0.12);
+  color: #1e3c8a;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid #e9e9e9;
+  background: #fff;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.1);
+}
+
+.tile__icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.tile__body {
+  flex: 1;
+}
+
+.tile__title {
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+.tile__text {
+  color: #555;
+  font-size: 14px;
+}
+
+.tile__arrow {
+  font-size: 18px;
+  color: #ccc;
+}
+
+.tile--admin {
+  border-color: rgba(45, 91, 209, 0.25);
+  background: rgba(45, 91, 209, 0.05);
+}
+
+.tile--admin .tile__title {
+  color: #1e3c8a;
+}
+
+.profile__footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn--danger {
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: rgba(239,68,68,0.08);
+  color: #dc2626;
+  font-weight: 900;
+  font-size: 14px;
+  border: 1.5px solid rgba(239,68,68,0.2);
+  cursor: pointer;
+  transition: background 140ms;
+}
+
+.btn--danger:hover {
+  background: rgba(239,68,68,0.15);
+}
+
+@media (max-width: 900px) {
+  .profile__hero { flex-wrap: wrap; }
+  .grid { grid-template-columns: 1fr; }
+}

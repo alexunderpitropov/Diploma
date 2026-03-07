@@ -1,0 +1,85 @@
+<div class="auth">
+  <div class="auth__card">
+    <h1>{{ isLogin ? 'Вход в аккаунт' : 'Регистрация аккаунта' }}</h1>
+
+    <div class="auth__switch">
+      <button type="button" (click)="isLogin = true" [class.active]="isLogin">
+        Вход
+      </button>
+      <button type="button" (click)="isLogin = false" [class.active]="!isLogin">
+        Регистрация
+      </button>
+    </div>
+
+    <form (ngSubmit)="submit()">
+
+      <input
+        *ngIf="!isLogin"
+        type="text"
+        placeholder="Имя"
+        [(ngModel)]="firstName"
+        name="firstName"
+        required
+      />
+
+      <input
+        *ngIf="!isLogin"
+        type="text"
+        placeholder="Фамилия"
+        [(ngModel)]="lastName"
+        name="lastName"
+        required
+      />
+
+      <input
+        *ngIf="!isLogin"
+        type="text"
+        placeholder="Имя пользователя"
+        [(ngModel)]="username"
+        name="username"
+        required
+      />
+
+      <input
+        *ngIf="!isLogin"
+        type="text"
+        inputmode="numeric"
+        placeholder="Телефон (+373...)"
+        [(ngModel)]="phoneNumber"
+        name="phoneNumber"
+        required
+        pattern="^\+?\d{8,15}$"
+      />
+
+      <input
+        type="email"
+        placeholder="Email"
+        [(ngModel)]="email"
+        name="email"
+        required
+      />
+
+      <input
+        type="password"
+        placeholder="Пароль"
+        [(ngModel)]="password"
+        name="password"
+        required
+      />
+
+      <input
+        *ngIf="!isLogin"
+        type="password"
+        placeholder="Повторите пароль"
+        [(ngModel)]="confirmPassword"
+        name="confirmPassword"
+        required
+      />
+
+      <button type="submit">
+        {{ isLogin ? 'Войти' : 'Создать аккаунт' }}
+      </button>
+
+    </form>
+  </div>
+</div>

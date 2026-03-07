@@ -1,0 +1,62 @@
+<section class="page">
+  <div class="top">
+    <h1>Мои заказы</h1>
+    <a class="btn btn--ghost" routerLink="/profile">← Профиль</a>
+  </div>
+
+  @if (loading) {
+    <div class="state">Загрузка…</div>
+  }
+
+  @if (!loading && orders.length === 0) {
+    <div class="empty">
+      <div class="empty__icon">📦</div>
+      <div class="empty__text">Заказов пока нет</div>
+      <a class="btn" routerLink="/catalog">Перейти в каталог</a>
+    </div>
+  }
+
+  @if (!loading && orders.length > 0) {
+    <div class="orders">
+      @for (order of orders; track order.id) {
+        <div class="order">
+          <div class="order__head" (click)="toggle(order.id)">
+            <div class="order__left">
+              <div class="order__id">Заказ №{{ order.id }}</div>
+              <div class="order__date">{{ order.createdAt | date:'dd.MM.yyyy HH:mm' }}</div>
+            </div>
+            <div class="order__right">
+              <span class="status" [ngClass]="statusClass(order.status)">{{ statusLabel(order.status) }}</span>
+              <div class="order__total">{{ order.totalPrice }} MDL</div>
+              @if (canCancel(order.status)) {
+                <button
+                  class="btn btn--cancel"
+                  [disabled]="cancellingId === order.id"
+                  (click)="cancel($event, order.id)"
+                >
+                  {{ cancellingId === order.id ? '...' : 'Отменить' }}
+                </button>
+              }
+              <div class="order__arrow">{{ expanded === order.id ? '↑' : '↓' }}</div>
+            </div>
+          </div>
+
+          @if (expanded === order.id) {
+            <div class="order__body">
+              <div class="order__address">📍 {{ order.deliveryAddress }}</div>
+              <div class="order__items">
+                @for (item of order.items; track item.id) {
+                  <div class="order-item">
+                    <div class="order-item__name">{{ item.productName }}</div>
+                    <div class="order-item__qty">{{ item.quantity }} шт.</div>
+                    <div class="order-item__price">{{ +item.priceAtPurchase * item.quantity }} MDL</div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>

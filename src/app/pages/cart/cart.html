@@ -1,0 +1,49 @@
+<section class="page">
+  <div class="top">
+    <h1>Корзина</h1>
+    <a class="btn btn--ghost" routerLink="/catalog">← Каталог</a>
+  </div>
+
+  @if (loading) {
+    <div class="state">Загрузка…</div>
+  }
+
+  @if (!loading && items.length === 0) {
+    <div class="empty">
+      <div class="empty__icon">🛒</div>
+      <div class="empty__text">Корзина пуста</div>
+      <a class="btn" routerLink="/catalog">Перейти в каталог</a>
+    </div>
+  }
+
+  @if (!loading && items.length > 0) {
+    <div class="cart">
+      <div class="cart__items">
+        @for (item of items; track item.cartItemId) {
+          <div class="cart-item">
+            <div class="cart-item__info">
+              <div class="cart-item__name">{{ item.productName }}</div>
+              <div class="cart-item__price">{{ item.price }} MDL / шт.</div>
+            </div>
+            <div class="cart-item__controls">
+              <button class="qty-btn" (click)="decrease(item)">−</button>
+              <span class="qty">{{ item.quantity }}</span>
+              <button class="qty-btn" (click)="increase(item)"[disabled]="item.quantity >= item.stock">+</button>
+            </div>
+            <div class="cart-item__total">{{ (+item.price * item.quantity) }} MDL</div>
+            <button class="remove-btn" (click)="remove(item); $event.stopPropagation()">🗑️</button>
+          </div>
+        }
+      </div>
+
+      <div class="cart__footer">
+        <button class="btn btn--ghost" (click)="clear()">Очистить корзину</button>
+        <div class="cart__total">
+          <span>Итого:</span>
+          <strong>{{ total }} MDL</strong>
+        </div>
+        <a class="btn" routerLink="/checkout">Оформить заказ</a>
+      </div>
+    </div>
+  }
+</section>

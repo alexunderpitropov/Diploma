@@ -1,0 +1,76 @@
+<section class="page">
+  @if (user) {
+    <div class="profile">
+
+      <div class="profile__hero">
+        <div class="avatar">{{ initials }}</div>
+        <div class="profile__hero-info">
+          <h1 class="profile__name">{{ displayName }}</h1>
+          <div class="profile__email">{{ user.email }}</div>
+          @if (user.username) {
+            <div class="profile__username">{{ '@' + user.username }}</div>
+          }
+        </div>
+        <span class="badge" [class.badge--admin]="isAdmin">
+          {{ isAdmin ? 'Администратор' : 'Пользователь' }}
+        </span>
+      </div>
+
+      <div class="grid">
+        <a class="tile" routerLink="/orders">
+          <div class="tile__icon">📦</div>
+          <div class="tile__body">
+            <div class="tile__title">Мои заказы</div>
+            <div class="tile__text">История заказов и текущие статусы</div>
+          </div>
+          <div class="tile__arrow">→</div>
+        </a>
+
+        <a class="tile" routerLink="/wishlist">
+          <div class="tile__icon">❤️</div>
+          <div class="tile__body">
+            <div class="tile__title">Избранное</div>
+            <div class="tile__text">Сохранённые товары</div>
+          </div>
+          <div class="tile__arrow">→</div>
+        </a>
+
+        <a class="tile" routerLink="/cart">
+          <div class="tile__icon">🛒</div>
+          <div class="tile__body">
+            <div class="tile__title">Корзина</div>
+            <div class="tile__text">Проверь и оформи заказ</div>
+          </div>
+          <div class="tile__arrow">→</div>
+        </a>
+
+        @if (!isAdmin) {
+          <a class="tile" routerLink="/help">
+            <div class="tile__icon">💬</div>
+            <div class="tile__body">
+              <div class="tile__title">Помощь</div>
+              <div class="tile__text">FAQ и контакты поддержки</div>
+            </div>
+            <div class="tile__arrow">→</div>
+          </a>
+        }
+
+        @if (isAdmin) {
+          <a class="tile tile--admin" routerLink="/admin/dashboard">
+            <div class="tile__icon">⚙️</div>
+            <div class="tile__body">
+              <div class="tile__title">Админ-панель</div>
+              <div class="tile__text">Управление магазином</div>
+            </div>
+            <div class="tile__arrow">→</div>
+          </a>
+        }
+      </div>
+
+      <div class="profile__footer">
+        <button class="btn btn--danger" (click)="logout()">Выйти из аккаунта</button>
+      </div>
+
+    </div>
+  }
+</section>

@@ -1,0 +1,11 @@
+<div class="auth">
+  <h1>Регистрация</h1>
+
+  <form (ngSubmit)="submit()">
+    <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required />
+    <input type="password" placeholder="Пароль" [(ngModel)]="password" name="password" required />
+    <button type="submit">Создать аккаунт</button>
+  </form>
+
+  <a routerLink="/login">Войти</a>
+</div>

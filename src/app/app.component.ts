@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core'
+import { Component } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 import { Header } from './layout/header/header'
 import { Footer } from './layout/footer/footer'
@@ -9,8 +9,5 @@ import { ToastComponent } from './shared/toast/toast'
   standalone: true,
   imports: [RouterOutlet, Header, Footer, ToastComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('console-shop-ui')
-}
+export class App {}

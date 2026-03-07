@@ -1,0 +1,23 @@
+<footer class="footer" [ngClass]="themeService.theme()">
+  <div class="footer__container">
+    <div class="footer__col">
+      <div class="footer__logo">ConsoleShop</div>
+      <div class="footer__text">Интернет-магазин консолей и игр.</div>
+    </div>
+
+    <div class="footer__col">
+      <div class="footer__title">Навигация</div>
+      <a routerLink="/platforms">Платформы</a>
+      <a routerLink="/catalog">Каталог</a>
+      <a routerLink="/cart">Корзина</a>
+    </div>
+
+    <div class="footer__col">
+      <div class="footer__title">Контакты</div>
+      <div class="footer__text">email: support@consoleshop.md</div>
+      <div class="footer__text">тел: +373 (69) 123-456</div>
+    </div>
+  </div>
+
+  <div class="footer__bottom">© 2026 ConsoleShop</div>
+</footer>
