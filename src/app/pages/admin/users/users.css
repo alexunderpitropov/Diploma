@@ -153,3 +153,81 @@ tr:hover td {
   background: rgba(239, 68, 68, 0.08);
   border-color: rgba(239, 68, 68, 0.3);
 }
+
+/* 1200px */
+@media (max-width: 1200px) {
+  .page {
+    max-width: 100%;
+    padding: 40px 24px 40px;
+  }
+}
+
+/* 1024px */
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 30px;
+  }
+
+  th, td {
+    padding: 10px 12px;
+  }
+}
+
+/* 768px */
+@media (max-width: 768px) {
+  .page {
+    padding: 32px 16px 32px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  th, td {
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+
+  .td--id {
+    display: none;
+  }
+}
+
+/* 480px */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 22px;
+  }
+
+  .top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  th, td {
+    padding: 8px 8px;
+    font-size: 11px;
+  }
+
+  .td--email {
+    display: none;
+  }
+}
+
+/* 360px */
+@media (max-width: 360px) {
+  .page {
+    padding: 24px 12px 24px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .action-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}

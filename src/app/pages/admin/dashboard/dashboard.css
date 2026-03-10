@@ -53,8 +53,8 @@ p {
   color: #fff;
   font-weight: 900;
   font-size: 13px;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
   transition: transform 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
   user-select: none;
 }
@@ -62,12 +62,12 @@ p {
 .btn:hover {
   opacity: 0.96;
   transform: translateY(-1px);
-  box-shadow: 0 14px 32px rgba(0,0,0,0.14);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.14);
 }
 
 .btn:active {
   transform: translateY(0);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.10);
 }
 
 .who {
@@ -133,13 +133,12 @@ p {
   flex-shrink: 0;
 }
 
-/* лёгкая визуальная разница ролей, но в рамках твоего ч/б */
 .pill[data-role="ADMIN"] {
   background: #111;
 }
 
 .pill[data-role="USER"] {
-  background: rgba(17,17,17,0.70);
+  background: rgba(17, 17, 17, 0.70);
 }
 
 .who__email {
@@ -210,8 +209,24 @@ p {
   background: rgba(45, 91, 209, 0.06);
 }
 
-/* адаптив */
-@media (max-width: 980px) {
+/* 1200px */
+@media (max-width: 1200px) {
+  .page {
+    max-width: 100%;
+    padding: 40px 24px 24px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* 1024px */
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 30px;
+  }
+
   .top {
     flex-direction: column;
     align-items: flex-start;
@@ -220,7 +235,6 @@ p {
   .tools {
     width: 100%;
     justify-content: space-between;
-    gap: 10px;
     flex-wrap: wrap;
   }
 
@@ -228,17 +242,54 @@ p {
     max-width: none;
     width: 100%;
   }
+}
+
+/* 768px */
+@media (max-width: 768px) {
+  .page {
+    padding: 32px 16px 20px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat__value {
+    font-size: 24px;
+  }
+}
+
+/* 480px */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 22px;
+  }
 
   .grid {
     grid-template-columns: 1fr;
   }
 
-  a.stat {
-    text-decoration: none;
-    cursor: pointer;
+  .actions {
+    flex-wrap: wrap;
+    gap: 8px;
   }
-  a.stat:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.13);
+}
+
+/* 360px */
+@media (max-width: 360px) {
+  .page {
+    padding: 24px 12px 16px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .stat__value {
+    font-size: 20px;
   }
 }

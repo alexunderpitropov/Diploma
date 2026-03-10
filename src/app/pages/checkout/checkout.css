@@ -80,7 +80,7 @@ h1 {
   border: 1px solid #ebebeb;
   border-radius: 18px;
   padding: 24px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
 }
 
 .block__title {
@@ -223,7 +223,6 @@ h1 {
   text-align: center;
 }
 
-/* ── CARD FORM ── */
 .card-form {
   background: #f8f8f8;
   border: 1.5px solid #e8e8e8;
@@ -247,7 +246,6 @@ h1 {
   letter-spacing: 0.06em;
 }
 
-/* Card preview */
 .card-preview {
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #111 100%);
   border-radius: 14px;
@@ -255,7 +253,7 @@ h1 {
   margin-bottom: 20px;
   color: #fff;
   font-family: 'Courier New', monospace;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   position: relative;
   overflow: hidden;
 }
@@ -268,7 +266,7 @@ h1 {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .card-preview::after {
@@ -279,7 +277,7 @@ h1 {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .card-preview__chip {
@@ -320,7 +318,6 @@ h1 {
   opacity: 0.85;
 }
 
-/* Card row (expiry + cvv) */
 .card-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -335,8 +332,84 @@ h1 {
   background: #fff;
 }
 
-@media (max-width: 700px) {
+/* 1200px */
+@media (max-width: 1200px) {
+  .page {
+    max-width: 100%;
+    padding: 40px 24px 40px;
+  }
+}
+
+/* 1024px */
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 30px;
+  }
+
+  .layout {
+    gap: 16px;
+  }
+}
+
+/* 768px */
+@media (max-width: 768px) {
+  .page {
+    padding: 32px 16px 32px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
   .layout {
     grid-template-columns: 1fr;
+  }
+
+  .top {
+    margin-bottom: 24px;
+  }
+}
+
+/* 480px */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 22px;
+  }
+
+  .block {
+    padding: 18px;
+  }
+
+  .card-preview__number {
+    font-size: 14px;
+    letter-spacing: 0.12em;
+  }
+
+  .payment-option {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .card-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 360px */
+@media (max-width: 360px) {
+  .page {
+    padding: 24px 12px 24px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .block {
+    padding: 14px;
+  }
+
+  .card-form {
+    padding: 14px;
   }
 }

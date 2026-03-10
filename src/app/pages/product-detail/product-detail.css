@@ -199,20 +199,6 @@
   opacity: 1;
 }
 
-@media (max-width: 700px) {
-  .product {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .product__name {
-    font-size: 28px;
-  }
-
-  .product__price {
-    font-size: 32px;
-  }
-}
 .specs-block {
   margin-top: 40px;
   background: #fff;
@@ -265,6 +251,7 @@
   font-weight: 700;
   color: #111;
 }
+
 .similar {
   margin-top: 48px;
 }
@@ -296,7 +283,7 @@
 
 .similar-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
 }
 
 .similar-card__img {
@@ -338,11 +325,6 @@
   color: var(--accent);
 }
 
-@media (max-width: 700px) {
-  .similar__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 .similar__head {
   display: flex;
   align-items: center;
@@ -385,4 +367,108 @@
   color: #888;
   min-width: 40px;
   text-align: center;
+}
+
+/* 1200px */
+@media (max-width: 1200px) {
+  .page {
+    max-width: 100%;
+    padding: 40px 24px 40px;
+  }
+
+  .similar__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 1024px */
+@media (max-width: 1024px) {
+  .product {
+    gap: 32px;
+  }
+
+  .product__name {
+    font-size: 30px;
+  }
+
+  .product__price {
+    font-size: 34px;
+  }
+}
+
+/* 768px */
+@media (max-width: 768px) {
+  .page {
+    padding: 32px 16px 32px;
+  }
+
+  .product {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .product__name {
+    font-size: 28px;
+  }
+
+  .product__price {
+    font-size: 32px;
+  }
+
+  .similar__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .specs-row {
+    padding: 10px 16px;
+  }
+
+  .specs-row__label {
+    width: 140px;
+  }
+}
+
+/* 480px */
+@media (max-width: 480px) {
+  .product__name {
+    font-size: 24px;
+  }
+
+  .product__price {
+    font-size: 28px;
+  }
+
+  .btn {
+    padding: 12px 18px;
+    font-size: 14px;
+  }
+
+  .specs-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .specs-row__label {
+    width: auto;
+  }
+}
+
+/* 360px */
+@media (max-width: 360px) {
+  .page {
+    padding: 24px 12px 24px;
+  }
+
+  .product__name {
+    font-size: 22px;
+  }
+
+  .product__price {
+    font-size: 26px;
+  }
+
+  .similar__grid {
+    grid-template-columns: 1fr;
+  }
 }

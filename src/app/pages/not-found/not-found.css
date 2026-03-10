@@ -46,3 +46,68 @@
 .not-found__btn:hover {
   opacity: 0.82;
 }
+
+/* 1200px */
+@media (max-width: 1200px) {
+  .not-found__code {
+    font-size: 100px;
+  }
+}
+
+/* 1024px */
+@media (max-width: 1024px) {
+  .not-found__code {
+    font-size: 90px;
+  }
+
+  .not-found__title {
+    font-size: 24px;
+  }
+}
+
+/* 768px */
+@media (max-width: 768px) {
+  .not-found__code {
+    font-size: 80px;
+  }
+
+  .not-found__title {
+    font-size: 22px;
+  }
+
+  .not-found__sub {
+    font-size: 14px;
+  }
+}
+
+/* 480px */
+@media (max-width: 480px) {
+  .not-found__code {
+    font-size: 64px;
+  }
+
+  .not-found__title {
+    font-size: 20px;
+    margin-top: -12px;
+  }
+
+  .not-found__btn {
+    padding: 10px 22px;
+    font-size: 14px;
+  }
+}
+
+/* 360px */
+@media (max-width: 360px) {
+  .not-found__code {
+    font-size: 52px;
+  }
+
+  .not-found__title {
+    font-size: 18px;
+  }
+
+  .not-found__sub {
+    font-size: 13px;
+  }
+}
