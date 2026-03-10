@@ -5,6 +5,7 @@ import { AdminApi, AdminOrder } from '../../../core/api/admin.api'
 
 const STATUS_LABELS: Record<string, string> = {
   PENDING: 'Ожидает',
+  CONFIRMED: 'Подтверждён',
   PROCESSING: 'В обработке',
   SHIPPED: 'Отправлен',
   DELIVERED: 'Доставлен',

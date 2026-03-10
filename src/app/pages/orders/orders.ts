@@ -65,6 +65,7 @@ export class Orders implements OnInit {
   statusLabel(status: string): string {
     const map: Record<string, string> = {
       PENDING: 'Ожидает',
+      CONFIRMED: 'Подтверждён',
       PROCESSING: 'В обработке',
       SHIPPED: 'Отправлен',
       DELIVERED: 'Доставлен',
@@ -76,6 +77,7 @@ export class Orders implements OnInit {
   statusClass(status: string): string {
     const map: Record<string, string> = {
       PENDING: 'status--pending',
+      CONFIRMED: 'status--confirmed',
       PROCESSING: 'status--processing',
       SHIPPED: 'status--shipped',
       DELIVERED: 'status--delivered',

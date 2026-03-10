@@ -1,23 +1,155 @@
-.page { max-width: 1000px; margin: 0 auto; padding: 52px 20px 48px; }
-.top { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 28px; }
-h1 { margin: 0 0 6px; font-size: 36px; font-weight: 950; color: #111; letter-spacing: -0.03em; }
-p { margin: 0; color: #666; font-size: 14px; }
-.btn { padding: 10px 16px; border-radius: 12px; background: #0f0f0f; color: #fff; font-weight: 900; font-size: 13px; border: none; cursor: pointer; text-decoration: none; display: inline-block; transition: opacity 140ms, transform 140ms; }
-.btn:hover { opacity: 0.88; transform: translateY(-1px); }
-.btn--ghost { background: transparent; color: #111; border: 1.5px solid #e0e0e0; }
-.btn--ghost:hover { background: #f5f5f5; opacity: 1; }
-.state { padding: 20px; border-radius: 14px; background: #fff; border: 1px solid #eee; color: #666; }
-.table-wrap { background: #fff; border: 1px solid #eee; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-thead { background: #f7f7f7; }
-th { padding: 12px 14px; text-align: left; font-weight: 800; color: #555; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 1px solid #eee; }
-td { padding: 12px 14px; border-bottom: 1px solid #f3f3f3; vertical-align: middle; color: #222; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: #fafafa; }
-.td--id { color: #aaa; font-size: 12px; }
-.td--username { font-weight: 700; }
-.td--email { color: #555; }
-.badge { padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; background: rgba(0,0,0,0.06); color: #555; }
-.badge--admin { background: #111; color: #fff; }
-.action-btn { background: none; border: 1px solid #e5e5e5; border-radius: 8px; width: 32px; height: 32px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: background 120ms; }
-.action-btn--del:hover { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.3); }
+.page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 52px 20px 48px;
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 36px;
+  font-weight: 950;
+  color: #111;
+  letter-spacing: -0.03em;
+}
+
+p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #0f0f0f;
+  color: #fff;
+  font-weight: 900;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 140ms, transform 140ms;
+}
+
+.btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: #111;
+  border: 1.5px solid #e0e0e0;
+}
+
+.btn--ghost:hover {
+  background: #f5f5f5;
+  opacity: 1;
+}
+
+.state {
+  padding: 20px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #eee;
+  color: #666;
+}
+
+.table-wrap {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead {
+  background: #f7f7f7;
+}
+
+th {
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 800;
+  color: #555;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid #eee;
+}
+
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f3f3f3;
+  vertical-align: middle;
+  color: #222;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background: #fafafa;
+}
+
+.td--id {
+  color: #aaa;
+  font-size: 12px;
+}
+
+.td--username {
+  font-weight: 700;
+}
+
+.td--email {
+  color: #555;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(0, 0, 0, 0.06);
+  color: #555;
+}
+
+.badge--admin {
+  background: #111;
+  color: #fff;
+}
+
+.action-btn {
+  background: none;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms;
+}
+
+.action-btn--del:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.3);
+}
