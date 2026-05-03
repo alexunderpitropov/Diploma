@@ -6,7 +6,7 @@ services:
     container_name: consoleshop-db
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_DB: consoleshop
       POSTGRES_USER: consoleshop_user
