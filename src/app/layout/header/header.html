@@ -1,19 +1,26 @@
 <header class="header" [ngClass]="themeService.theme()">
   <div class="header__inner">
-    <a class="logo" routerLink="/platforms">ConsoleShop</a>
+    <a class="logo" routerLink="/platforms" (click)="closeMenu()">ConsoleShop</a>
 
-    <nav class="nav">
+    <button class="burger" (click)="toggleMenu()" [class.open]="menuOpen()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="nav" [class.nav--open]="menuOpen()">
       <a routerLink="/platforms"
          routerLinkActive="active"
-         [routerLinkActiveOptions]="{exact:true}">
+         [routerLinkActiveOptions]="{exact:true}"
+         (click)="closeMenu()">
         Платформы
       </a>
 
-      <a routerLink="/catalog" routerLinkActive="active">
+      <a routerLink="/catalog" routerLinkActive="active" (click)="closeMenu()">
         Каталог
       </a>
 
-      <a class="cart-link" routerLink="/cart" routerLinkActive="active">
+      <a class="cart-link" routerLink="/cart" routerLinkActive="active" (click)="closeMenu()">
         Корзина
         @if (cartCount.count() > 0) {
           <span class="cart-badge">{{ cartCount.count() }}</span>
@@ -21,19 +28,19 @@
       </a>
 
       @if (auth.isLoggedIn()) {
-        <a routerLink="/profile" routerLinkActive="active">
+        <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()">
           Личный кабинет
         </a>
       }
 
       @if (!auth.isLoggedIn()) {
-        <a routerLink="/auth">
+        <a routerLink="/auth" (click)="closeMenu()">
           Вход
         </a>
       }
 
       @if (auth.isAdmin()) {
-        <a routerLink="/admin/dashboard" routerLinkActive="active">
+        <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="closeMenu()">
           Админ
         </a>
       }

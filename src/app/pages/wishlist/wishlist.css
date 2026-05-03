@@ -79,7 +79,7 @@ h1 {
   background: #fff;
   border-radius: 18px;
   border: 1px solid #ebebeb;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
 }
 

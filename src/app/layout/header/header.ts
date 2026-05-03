@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core'
+import { Component, inject, OnInit, signal } from '@angular/core'
 import { Router, RouterLink, RouterLinkActive } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { AuthService } from '../../core/auth/auth.service'
@@ -18,13 +18,24 @@ export class Header implements OnInit {
   cartCount = inject(CartCountService)
   private router = inject(Router)
 
+  menuOpen = signal(false)
+
   ngOnInit() {
     this.cartCount.refresh()
+  }
+
+  toggleMenu() {
+    this.menuOpen.update(v => !v)
+  }
+
+  closeMenu() {
+    this.menuOpen.set(false)
   }
 
   logout() {
     this.auth.logout()
     this.cartCount.clear()
+    this.closeMenu()
     this.router.navigateByUrl('/platforms')
   }
 }
