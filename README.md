@@ -1,4 +1,4 @@
-# 🎮 Console Shop — шпаргалка к защите 16 июня
+# 🎮 Console Shop 
 
 ---
 
