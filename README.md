@@ -1,269 +1,269 @@
-# 🎮 Console Shop 
+# 🎮 Console Shop
 
 ---
 
-## 🔷 Что это вообще такое
+## 🔷 What Is This, Exactly
 
-**Console Shop** — интернет-магазин игровых консолей и игр (PlayStation, Xbox, Nintendo).  
-Мотивация: в Молдове нет специализированных онлайн-магазинов в этой нише.  
-Стек: **Java 17 + Spring Boot 3.5** (бэкенд) + **Angular 21** (фронтенд) + **PostgreSQL 15** (БД в Docker).
+**Console Shop** is an online store for game consoles and games (PlayStation, Xbox, Nintendo).  
+Motivation: there are no specialized online stores in this niche in Moldova.  
+Stack: **Java 17 + Spring Boot 3.5** (backend) + **Angular 21** (frontend) + **PostgreSQL 15** (DB in Docker).
 
 ---
 
-## 🔷 Стек — кратко зачем что
+## 🔷 Stack — Briefly, What Is Used for What
 
-| Технология | Зачем |
+| Technology | Purpose |
 |---|---|
-| Spring Boot 3.5 | Быстрый старт REST API, встроенный Tomcat, convention over configuration |
-| Spring Security + JWT | Аутентификация без хранения сессий на сервере (stateless) |
-| Spring Data JPA + Hibernate | ORM, работа с БД без написания SQL вручную |
-| PostgreSQL 15 | Реляционная СУБД, запускается в Docker |
-| Angular 21 | SPA, встроенный Router, Guards, HttpClient, TypeScript |
-| Docker Compose | Запуск PostgreSQL одной командой, воспроизводимое окружение |
-| Lombok | Убирает boilerplate: @Getter, @Setter, @Builder и т.д. |
+| Spring Boot 3.5 | Quick start for a REST API, built-in Tomcat, convention over configuration |
+| Spring Security + JWT | Authentication without storing sessions on the server (stateless) |
+| Spring Data JPA + Hibernate | ORM, working with the DB without writing SQL by hand |
+| PostgreSQL 15 | Relational DBMS, runs in Docker |
+| Angular 21 | SPA, built-in Router, Guards, HttpClient, TypeScript |
+| Docker Compose | Start PostgreSQL with one command, reproducible environment |
+| Lombok | Removes boilerplate: @Getter, @Setter, @Builder, etc. |
 
 ---
 
-## 🔷 Архитектура бэкенда (4 слоя)
+## 🔷 Backend Architecture (4 Layers)
 
 ```
 Controller → Service → Repository → Entity (→ PostgreSQL)
 ```
 
-- **Controller** (`@RestController`) — принимает HTTP, делегирует сервису, никакой логики
-- **Service** (`@Service`) — вся бизнес-логика: проверки, расчёты, транзакции
-- **Repository** (`JpaRepository`) — доступ к данным, генерирует SQL по имени метода
-- **Entity** (`@Entity`) — Java-класс = таблица в БД
+- **Controller** (`@RestController`) — accepts HTTP, delegates to the service, no logic
+- **Service** (`@Service`) — all business logic: validation, calculations, transactions
+- **Repository** (`JpaRepository`) — data access, generates SQL from the method name
+- **Entity** (`@Entity`) — a Java class = a table in the DB
 
-**Пакет:** `com.consoleshop`  
-**Точка входа:** `ConsoleShopApplication` (`@SpringBootApplication`)
+**Package:** `com.consoleshop`  
+**Entry point:** `ConsoleShopApplication` (`@SpringBootApplication`)
 
 ---
 
-## 🔷 База данных — 10 таблиц
+## 🔷 Database — 10 Tables
 
-| Таблица | Что хранит |
+| Table | What it stores |
 |---|---|
-| `users` | Пользователи (email, username, password hash, role, phone) |
+| `users` | Users (email, username, password hash, role, phone) |
 | `platforms` | PlayStation, Xbox, Nintendo |
-| `categories` | Категории товаров, связаны с платформой |
-| `products` | Товары (name, price, stock, image_url, specs) |
-| `product_platforms` | Many-to-Many между products и platforms |
-| `carts` | Корзина — One-to-One с user |
-| `cart_items` | Позиции корзины (cart_id, product_id, quantity) |
-| `orders` | Заказы (status, total_price, delivery_address) |
-| `order_items` | Позиции заказа + **price_at_purchase** (цена зафиксирована!) |
-| `wishlist_items` | Список желаемого (user_id, product_id, added_at) |
+| `categories` | Product categories, linked to a platform |
+| `products` | Products (name, price, stock, image_url, specs) |
+| `product_platforms` | Many-to-Many between products and platforms |
+| `carts` | Cart — One-to-One with user |
+| `cart_items` | Cart items (cart_id, product_id, quantity) |
+| `orders` | Orders (status, total_price, delivery_address) |
+| `order_items` | Order items + **price_at_purchase** (the price is locked in!) |
+| `wishlist_items` | Wishlist (user_id, product_id, added_at) |
 
-**Важно:** `price_at_purchase` в order_items — это специальное поле, которое фиксирует цену товара на момент покупки. Если потом цена изменится в каталоге — старые заказы не затронуты.
+**Important:** `price_at_purchase` in order_items is a special field that records the product's price at the moment of purchase. If the price later changes in the catalog, old orders are not affected.
 
-**Роли:** `USER` и `ADMIN` — хранятся как строки (`@Enumerated(EnumType.STRING)`)
+**Roles:** `USER` and `ADMIN` — stored as strings (`@Enumerated(EnumType.STRING)`)
 
-**Статусы заказа:** `PENDING → CONFIRMED → PROCESSING → SHIPPED → DELIVERED`, в любой момент можно `CANCELLED`
+**Order statuses:** `PENDING → CONFIRMED → PROCESSING → SHIPPED → DELIVERED`, and `CANCELLED` is possible at any time
 
 ---
 
-## 🔷 REST API — основные группы
+## 🔷 REST API — Main Groups
 
-Все эндпоинты начинаются с `/api`.
+All endpoints start with `/api`.
 
-| Группа | Доступ | Что делает |
+| Group | Access | What it does |
 |---|---|---|
-| `POST /api/auth/register` | Публичный | Регистрация, сразу возвращает JWT |
-| `POST /api/auth/login` | Публичный | Вход, возвращает JWT |
-| `GET /api/auth/me` | USER/ADMIN | Данные текущего пользователя |
-| `GET /api/products/**` | Публичный | Каталог, фильтрация, поиск |
-| `GET /api/platforms` | Публичный | Список платформ |
-| `/api/cart/**` | USER/ADMIN | Корзина (get/add/update/remove/clear) |
-| `POST /api/orders` | USER/ADMIN | Оформить заказ |
-| `GET /api/orders` | USER/ADMIN | История заказов |
-| `PATCH /api/orders/{id}/cancel` | USER/ADMIN | Отменить заказ (только PENDING) |
-| `/api/wishlist/**` | USER/ADMIN | Вишлист |
-| `/api/admin/**` | ADMIN only | Всё административное |
+| `POST /api/auth/register` | Public | Registration, returns a JWT right away |
+| `POST /api/auth/login` | Public | Login, returns a JWT |
+| `GET /api/auth/me` | USER/ADMIN | Current user's data |
+| `GET /api/products/**` | Public | Catalog, filtering, search |
+| `GET /api/platforms` | Public | List of platforms |
+| `/api/cart/**` | USER/ADMIN | Cart (get/add/update/remove/clear) |
+| `POST /api/orders` | USER/ADMIN | Place an order |
+| `GET /api/orders` | USER/ADMIN | Order history |
+| `PATCH /api/orders/{id}/cancel` | USER/ADMIN | Cancel an order (PENDING only) |
+| `/api/wishlist/**` | USER/ADMIN | Wishlist |
+| `/api/admin/**` | ADMIN only | Everything administrative |
 
-**Всего 31 эндпоинт.**
-
----
-
-## 🔷 JWT — как работает
-
-1. Клиент отправляет `POST /api/auth/login` с email+password
-2. Сервер проверяет через `AuthenticationManager` → `BCrypt`
-3. `JwtTokenProvider.generateToken(email, role)` создаёт токен (алгоритм **HMAC SHA-256**, срок **24 часа = 86400000 мс**)
-4. Токен содержит: `subject=email`, `role`, `authorities`
-5. Клиент сохраняет токен в `localStorage`
-6. На каждый запрос Angular-интерцептор добавляет `Authorization: Bearer {token}`
-7. На сервере `JwtAuthFilter` (extends `OncePerRequestFilter`) перехватывает запрос, извлекает email, валидирует токен, устанавливает аутентификацию в `SecurityContextHolder`
-
-**Почему JWT а не сессии?** Сервер не хранит состояние → легче масштабировать горизонтально.
-
-**CSRF отключён** — потому что сессионные куки не используются, CSRF защищать нечего.
+**31 endpoints in total.**
 
 ---
 
-## 🔷 Security Config — кто куда может
+## 🔷 JWT — How It Works
+
+1. The client sends `POST /api/auth/login` with email+password
+2. The server verifies via `AuthenticationManager` → `BCrypt`
+3. `JwtTokenProvider.generateToken(email, role)` creates a token (algorithm **HMAC SHA-256**, lifetime **24 hours = 86400000 ms**)
+4. The token contains: `subject=email`, `role`, `authorities`
+5. The client stores the token in `localStorage`
+6. On every request, the Angular interceptor adds `Authorization: Bearer {token}`
+7. On the server, `JwtAuthFilter` (extends `OncePerRequestFilter`) intercepts the request, extracts the email, validates the token, and sets the authentication in `SecurityContextHolder`
+
+**Why JWT and not sessions?** The server doesn't store state → easier to scale horizontally.
+
+**CSRF is disabled** — because session cookies are not used, there is nothing for CSRF to protect.
+
+---
+
+## 🔷 Security Config — Who Can Go Where
 
 ```
 /api/auth/login, /api/auth/register  → permitAll
 GET /api/products/**, /api/platforms/**  → permitAll
 GET /images/**  → permitAll
 /api/admin/**  → hasRole("ADMIN")
-всё остальное  → authenticated
+everything else  → authenticated
 ```
 
-Сессии: `STATELESS` — Spring не создаёт сессии вообще.  
-CORS: разрешены запросы с `localhost:*` и `127.0.0.1:*`.
+Sessions: `STATELESS` — Spring doesn't create sessions at all.  
+CORS: requests from `localhost:*` and `127.0.0.1:*` are allowed.
 
 ---
 
-## 🔷 Ключевые классы бэкенда
+## 🔷 Key Backend Classes
 
 ### AuthServiceImpl
-- При регистрации: проверяет уникальность email/username/phone → хэширует пароль BCrypt → сохраняет User → **автоматически создаёт Cart** → генерирует JWT
-- При входе: `AuthenticationManager.authenticate()` → загружает User → генерирует JWT
+- On registration: checks uniqueness of email/username/phone → hashes the password with BCrypt → saves the User → **automatically creates a Cart** → generates a JWT
+- On login: `AuthenticationManager.authenticate()` → loads the User → generates a JWT
 
-### OrderServiceImpl (самый сложный)
-- Проверяет что корзина не пуста
-- Проверяет остатки каждого товара на складе
-- Создаёт `OrderItem` с `priceAtPurchase = product.getPrice()`
-- Считает total через `reduce`
-- Уменьшает `stock` у каждого товара
-- Очищает корзину
-- **Всё в одной транзакции** `@Transactional`
-- Отмена — только если `status == PENDING`, возвращает stock обратно
+### OrderServiceImpl (the most complex)
+- Checks that the cart is not empty
+- Checks the stock of each product in the warehouse
+- Creates an `OrderItem` with `priceAtPurchase = product.getPrice()`
+- Calculates the total via `reduce`
+- Decreases `stock` for each product
+- Clears the cart
+- **Everything in a single transaction** `@Transactional`
+- Cancellation — only if `status == PENDING`, returns the stock back
 
 ### CartServiceImpl
-- `addItem`: проверяет stock, если товар уже в корзине — увеличивает quantity (`ifPresentOrElse`)
-- `removeItem`: после удаления вызывает `flush()` для синхронизации
-- `clearCart`: `cart.getItems().clear()` → `orphanRemoval=true` удалит всё сам
+- `addItem`: checks stock; if the product is already in the cart — increases quantity (`ifPresentOrElse`)
+- `removeItem`: after removal calls `flush()` for synchronization
+- `clearCart`: `cart.getItems().clear()` → `orphanRemoval=true` deletes everything by itself
 
-### ProductRepository — кастомные запросы
-- `findAllWithPlatforms` — `LEFT JOIN FETCH` чтобы не было N+1 запросов
-- `findByPlatformsId` — товары по платформе через промежуточную таблицу
-- `findByNameContainingIgnoreCase` — поиск без учёта регистра
+### ProductRepository — Custom Queries
+- `findAllWithPlatforms` — `LEFT JOIN FETCH` to avoid N+1 queries
+- `findByPlatformsId` — products by platform via the join table
+- `findByNameContainingIgnoreCase` — case-insensitive search
 
 ---
 
-## 🔷 Фронтенд (Angular 21)
+## 🔷 Frontend (Angular 21)
 
-**SPA** — браузер загружает страницу один раз, навигация через Angular Router.
+**SPA** — the browser loads the page once, navigation happens via Angular Router.
 
-**Lazy loading** — каждый компонент загружается только при первом переходе на маршрут (`loadComponent`). Ускоряет первый запуск.
+**Lazy loading** — each component is loaded only on the first navigation to its route (`loadComponent`). Speeds up the initial load.
 
-### Структура папок
+### Folder Structure
 ```
 src/app/
-  core/api/          — API-сервисы (product, cart, order, wishlist...)
+  core/api/          — API services (product, cart, order, wishlist...)
   core/auth/         — AuthService, authGuard, adminGuard, authInterceptor
   core/              — CartCountService, ThemeService, ToastService
   layout/            — Header, Footer
-  pages/             — все страницы (catalog, cart, orders, wishlist, admin/...)
-  shared/            — Toast компонент
+  pages/             — all pages (catalog, cart, orders, wishlist, admin/...)
+  shared/            — Toast component
 ```
 
 ### Guards
-- `authGuard` — проверяет `isLoggedIn()` (есть ли токен в localStorage). Нет → редирект на `/auth`
-- `adminGuard` — читает `user$` (BehaviorSubject), проверяет `role === 'ADMIN'`. Нет → редирект на `/platforms`
+- `authGuard` — checks `isLoggedIn()` (whether a token exists in localStorage). If not → redirect to `/auth`
+- `adminGuard` — reads `user$` (BehaviorSubject), checks `role === 'ADMIN'`. If not → redirect to `/platforms`
 
 ### JWT Interceptor
 ```typescript
-// auth.interceptor.ts — функциональный interceptor
+// auth.interceptor.ts — functional interceptor
 const token = localStorage.getItem('token')
 if (token) req = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
 ```
-Работает автоматически для всех HTTP-запросов.
+Works automatically for all HTTP requests.
 
 ### AuthService
-- `user$` — `BehaviorSubject<UserInfo | null>` — реактивное состояние пользователя
-- При получении токена — декодирует payload (base64), достаёт email и role
-- `loadMe()` — подгружает полные данные с `/api/auth/me`
+- `user$` — `BehaviorSubject<UserInfo | null>` — reactive user state
+- When a token is received — decodes the payload (base64), extracts email and role
+- `loadMe()` — loads full data from `/api/auth/me`
 
-### Темизация
-- `ThemeService` использует Angular **Signals** (`signal<PlatformTheme>`)
-- PlayStation → синий (`theme-ps`), Xbox → зелёный (`theme-xbox`), Nintendo → красный (`theme-nintendo`)
-- При уходе из каталога — `themeService.clear()` в `ngOnDestroy`
+### Theming
+- `ThemeService` uses Angular **Signals** (`signal<PlatformTheme>`)
+- PlayStation → blue (`theme-ps`), Xbox → green (`theme-xbox`), Nintendo → red (`theme-nintendo`)
+- When leaving the catalog — `themeService.clear()` in `ngOnDestroy`
 
 ### ToastService
-- Тоже на Signals — массив `toasts`
-- Через `setTimeout(3000)` автоматически удаляет уведомление
+- Also built on Signals — a `toasts` array
+- Via `setTimeout(3000)` it automatically removes the notification
 
 ---
 
-## 🔷 Запуск (порядок важен!)
+## 🔷 Running the Project (Order Matters!)
 
 ```bash
-# 1. База данных
-docker-compose up -d        # поднимает PostgreSQL 15 на порту 5432
+# 1. Database
+docker-compose up -d        # starts PostgreSQL 15 on port 5432
 
-# 2. Бэкенд
-mvn spring-boot:run         # Spring Boot на localhost:8080
-# Hibernate автоматически создаёт таблицы (ddl-auto: update)
+# 2. Backend
+mvn spring-boot:run         # Spring Boot on localhost:8080
+# Hibernate automatically creates the tables (ddl-auto: update)
 
-# 3. Фронтенд
-npm install                 # первый раз
-ng serve                    # Angular на localhost:4200
+# 3. Frontend
+npm install                 # first time only
+ng serve                    # Angular on localhost:4200
 ```
 
-**Важно:** Spring Boot при старте сразу коннектится к БД — если PostgreSQL не запущен, упадёт с ошибкой.
+**Important:** Spring Boot connects to the DB immediately on startup — if PostgreSQL is not running, it will crash with an error.
 
-**application.yaml — ключевые параметры:**
-- `ddl-auto: update` — Hibernate сам создаёт/обновляет таблицы
-- `open-in-view: false` — предотвращает ленивую загрузку при сериализации
-- `show-sql: true` — выводит SQL в лог (для отладки)
-- JWT expiration: `86400000` мс = 24 часа
-
----
-
-## 🔷 Что может спросить комиссия
-
-**"Зачем JWT, а не сессии?"**  
-→ Stateless — сервер не хранит состояние. Легко масштабировать. Токен самодостаточен.
-
-**"Как защищены пароли?"**  
-→ BCrypt хэширование. В БД хранится только хэш, исходный пароль нигде не сохраняется.
-
-**"Что такое N+1 проблема и как ты её решил?"**  
-→ При ленивой загрузке для каждого товара шёл бы отдельный запрос за платформами. Решение: `JOIN FETCH` в `@Query` — загружает всё одним запросом.
-
-**"Почему отключён CSRF?"**  
-→ CSRF актуален когда браузер автоматически отправляет куки. Здесь аутентификация через JWT в заголовке Authorization — браузер его не отправляет автоматически, поэтому CSRF не нужен.
-
-**"Что такое price_at_purchase?"**  
-→ Цена товара фиксируется в момент оформления заказа. Если потом в каталоге цену изменят, это не затронет уже созданные заказы.
-
-**"Как работает корзина?"**  
-→ Создаётся автоматически при регистрации пользователя (One-to-One). Хранится в БД. При оформлении заказа — очищается.
-
-**"Зачем Angular а не React?"**  
-→ Полноценный фреймворк: встроенный Router, Guards, HttpClient, DI — всё из коробки. React — библиотека, нужно собирать экосистему вручную. Для проекта с ролями и защитой маршрутов Angular логичнее.
-
-**"Что такое SPA и lazy loading?"**  
-→ SPA — браузер загружает HTML один раз, навигация без перезагрузки. Lazy loading — код компонента скачивается только при первом переходе на маршрут, не всё сразу.
-
-**"Как работает adminGuard?"**  
-→ Читает `user$` (BehaviorSubject), через `pipe(take(1), map(...))` проверяет что `role === 'ADMIN'`. Если нет — редирект на `/platforms`.
-
-**"Почему порт 5432/5433?"**  
-→ В docker-compose маппинг `5432:5432`. (В тексте диплома упомянут 5433 как вариант для избежания конфликта с локальным PostgreSQL — но в реальном коде стоит 5432.)
+**application.yaml — key parameters:**
+- `ddl-auto: update` — Hibernate creates/updates the tables itself
+- `open-in-view: false` — prevents lazy loading during serialization
+- `show-sql: true` — prints SQL to the log (for debugging)
+- JWT expiration: `86400000` ms = 24 hours
 
 ---
 
-## 🔷 Функционал приложения
+## 🔷 What the Committee Might Ask
 
-**Для всех (без авторизации):**
-- Главная: выбор платформы (PlayStation / Xbox / Nintendo)
-- Каталог с фильтрацией по платформе, категории, поиском и сортировкой
-- Детальная страница товара
+**"Why JWT and not sessions?"**  
+→ Stateless — the server doesn't store state. Easy to scale. The token is self-contained.
 
-**Для USER:**
-- Корзина (add/update/remove/clear)
-- Оформление заказа (адрес доставки, способ оплаты)
-- История заказов с цветными статусами, отмена PENDING заказов
-- Список желаемого
-- Профиль
+**"How are passwords protected?"**  
+→ BCrypt hashing. Only the hash is stored in the DB; the original password is not saved anywhere.
 
-**Для ADMIN:**
-- Дашборд со статистикой (пользователи, товары, заказы, ожидающие заказы, выручка)
-- Управление товарами (CRUD + загрузка изображений)
-- Управление заказами (изменение статуса)
-- Управление пользователями (просмотр, удаление)
+**"What is the N+1 problem and how did you solve it?"**  
+→ With lazy loading, a separate query for platforms would be issued for each product. Solution: `JOIN FETCH` in `@Query` — loads everything in a single query.
+
+**"Why is CSRF disabled?"**  
+→ CSRF matters when the browser automatically sends cookies. Here authentication uses a JWT in the Authorization header — the browser doesn't send it automatically, so CSRF protection isn't needed.
+
+**"What is price_at_purchase?"**  
+→ The product's price is locked in at the moment the order is placed. If the price is later changed in the catalog, it won't affect orders that have already been created.
+
+**"How does the cart work?"**  
+→ It is created automatically when a user registers (One-to-One). Stored in the DB. When an order is placed — it is cleared.
+
+**"Why Angular and not React?"**  
+→ A full-fledged framework: built-in Router, Guards, HttpClient, DI — everything out of the box. React is a library; you have to assemble the ecosystem manually. For a project with roles and route protection, Angular is more logical.
+
+**"What are SPA and lazy loading?"**  
+→ SPA — the browser loads the HTML once, navigation happens without reloading. Lazy loading — a component's code is downloaded only on the first navigation to its route, not all at once.
+
+**"How does adminGuard work?"**  
+→ Reads `user$` (BehaviorSubject), and via `pipe(take(1), map(...))` checks that `role === 'ADMIN'`. If not — redirects to `/platforms`.
+
+**"Why port 5432/5433?"**  
+→ In docker-compose the mapping is `5432:5432`. (The diploma text mentions 5433 as an option to avoid a conflict with a local PostgreSQL — but the actual code uses 5432.)
+
+---
+
+## 🔷 Application Functionality
+
+**For everyone (no authentication):**
+- Home: platform selection (PlayStation / Xbox / Nintendo)
+- Catalog with filtering by platform, category, search, and sorting
+- Product detail page
+
+**For USER:**
+- Cart (add/update/remove/clear)
+- Checkout (delivery address, payment method)
+- Order history with color-coded statuses, cancellation of PENDING orders
+- Wishlist
+- Profile
+
+**For ADMIN:**
+- Dashboard with statistics (users, products, orders, pending orders, revenue)
+- Product management (CRUD + image upload)
+- Order management (status changes)
+- User management (view, delete)
