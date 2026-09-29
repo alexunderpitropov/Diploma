@@ -214,40 +214,6 @@ ng serve                    # Angular on localhost:4200
 
 ---
 
-## 🔷 What the Committee Might Ask
-
-**"Why JWT and not sessions?"**  
-→ Stateless — the server doesn't store state. Easy to scale. The token is self-contained.
-
-**"How are passwords protected?"**  
-→ BCrypt hashing. Only the hash is stored in the DB; the original password is not saved anywhere.
-
-**"What is the N+1 problem and how did you solve it?"**  
-→ With lazy loading, a separate query for platforms would be issued for each product. Solution: `JOIN FETCH` in `@Query` — loads everything in a single query.
-
-**"Why is CSRF disabled?"**  
-→ CSRF matters when the browser automatically sends cookies. Here authentication uses a JWT in the Authorization header — the browser doesn't send it automatically, so CSRF protection isn't needed.
-
-**"What is price_at_purchase?"**  
-→ The product's price is locked in at the moment the order is placed. If the price is later changed in the catalog, it won't affect orders that have already been created.
-
-**"How does the cart work?"**  
-→ It is created automatically when a user registers (One-to-One). Stored in the DB. When an order is placed — it is cleared.
-
-**"Why Angular and not React?"**  
-→ A full-fledged framework: built-in Router, Guards, HttpClient, DI — everything out of the box. React is a library; you have to assemble the ecosystem manually. For a project with roles and route protection, Angular is more logical.
-
-**"What are SPA and lazy loading?"**  
-→ SPA — the browser loads the HTML once, navigation happens without reloading. Lazy loading — a component's code is downloaded only on the first navigation to its route, not all at once.
-
-**"How does adminGuard work?"**  
-→ Reads `user$` (BehaviorSubject), and via `pipe(take(1), map(...))` checks that `role === 'ADMIN'`. If not — redirects to `/platforms`.
-
-**"Why port 5432/5433?"**  
-→ In docker-compose the mapping is `5432:5432`. (The diploma text mentions 5433 as an option to avoid a conflict with a local PostgreSQL — but the actual code uses 5432.)
-
----
-
 ## 🔷 Application Functionality
 
 **For everyone (no authentication):**
